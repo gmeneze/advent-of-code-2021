@@ -4,7 +4,7 @@ import scala.io.Source
 object Day1SonarSweep extends App {
   val allDepths: List[Int] =
     Using(Source.fromFile("./inputs/day-1-input.txt")) {
-      _.getLines.map(_.toInt).toList
+      _.getLines.map(_.strip.toInt).toList
     }.get
 
   def numTimesMeasurementIncreases: Int = {
