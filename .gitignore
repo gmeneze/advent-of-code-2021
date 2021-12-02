@@ -1,3 +1,4 @@
 *.tasty
 *.class
 inputs/
+.scalafmt.conf
