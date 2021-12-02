@@ -36,7 +36,7 @@ object Day1SonarSweep extends App {
         // if the difference is not positive, no change to counter
         case a :: b :: c :: d :: es => loop(b :: c :: d :: es, count)
 
-        // Terminal case: There are less than 3 elements
+        // Terminal case: There are less than 4 elements
         case _ => count
       }
 
