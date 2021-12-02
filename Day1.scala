@@ -1,7 +1,7 @@
 import scala.util.Using
 import scala.io.Source
 
-object Day1SonarSweep extends App {
+object Day1 extends App {
   val allDepths: List[Int] =
     Using(Source.fromFile("./inputs/day-1-input.txt")) {
       _.getLines.map(_.strip.toInt).toList
