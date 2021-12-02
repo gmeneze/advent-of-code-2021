@@ -1,13 +1,7 @@
-import scala.util.Using
-import scala.io.Source
+import InputReader._
 
 object Day1 extends App {
-  val allDepths: List[Int] =
-    Using(Source.fromFile("./inputs/day-1-input.txt")) {
-      _.getLines.map(_.strip.toInt).toList
-    }.get
-
-  def numTimesMeasurementIncreases: Int = {
+  def numTimesMeasurementIncreases(allDepths: List[Int]): Int = {
     def loop(depths: List[Int], count: Int): Int =
       depths match {
         // Terminal case
@@ -23,7 +17,7 @@ object Day1 extends App {
     loop(allDepths, 0)
   }
 
-  def numTimesMeasurementSlidingWindowIncreases: Int = {
+  def numTimesMeasurementSlidingWindowIncreases(allDepths: List[Int]): Int = {
     def loop(depths: List[Int], count: Int): Int =
       depths match {
         // Atleast 4 elements need to exist for a comparison
@@ -43,9 +37,14 @@ object Day1 extends App {
     loop(allDepths, 0)
   }
 
+  val allDepths: List[Int] = readAllLines("day-1-input.txt")
+    .map(_.trim)
+    .filterNot(_.isEmpty)
+    .map(_.toInt)
+
   // solution to part 1
-  println(numTimesMeasurementIncreases)
+  println(numTimesMeasurementIncreases(allDepths))
 
   // solution to part 2
-  println(numTimesMeasurementSlidingWindowIncreases)
+  println(numTimesMeasurementSlidingWindowIncreases(allDepths))
 }
