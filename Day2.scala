@@ -38,17 +38,50 @@ object Command {
 }
 
 object Day2 extends App {
+  def solutionToFirstHalf(allCommands: List[Command]): Int = {
+    import Direction._
+    val totalForwardMoves =
+      allCommands.filter(_.direction == Forward).map(_.moves).sum
+    val totalUpMoves = allCommands.filter(_.direction == Up).map(_.moves).sum
+    val totalDownMoves =
+      allCommands.filter(_.direction == Down).map(_.moves).sum
+
+    val finalHorizontalPos = totalForwardMoves
+    val finalDepth = (totalDownMoves - totalUpMoves)
+
+    finalHorizontalPos * finalDepth
+  }
+
+  def solutionToSecondHalf(allCommands: List[Command]): Int = {
+    import Direction._
+    case class Tracker(horizontalPos: Int, depth: Int, aim: Int)
+
+    val finalPos = allCommands.foldLeft(Tracker(0, 0, 0)) {
+      case (
+            Tracker(curHorizontalPos, curDepth, curAim),
+            Command(direction, moves)
+          ) =>
+        direction match {
+          case Down => Tracker(curHorizontalPos, curDepth, curAim + moves)
+          case Up   => Tracker(curHorizontalPos, curDepth, curAim - moves)
+          case Forward =>
+            Tracker(
+              curHorizontalPos + moves,
+              curDepth + (curAim * moves),
+              curAim
+            )
+        }
+    }
+
+    finalPos.horizontalPos * finalPos.depth
+  }
+
   val allCommands: List[Command] = {
     val allLines =
       readAllLines("day-2-input.txt").map(_.trim).filterNot(_.isEmpty)
     allLines.map(Command.fromString(_).get)
   }
 
-  import Direction._
-  val totalForwardMoves =
-    allCommands.filter(_.direction == Forward).map(_.moves).sum
-  val totalUpMoves = allCommands.filter(_.direction == Up).map(_.moves).sum
-  val totalDownMoves = allCommands.filter(_.direction == Down).map(_.moves).sum
-
-  println(totalForwardMoves * (totalDownMoves - totalUpMoves))
+  println(solutionToFirstHalf(allCommands))
+  println(solutionToSecondHalf(allCommands))
 }

@@ -1,7 +1,7 @@
 import InputReader._
 
 object Day1 extends App {
-  def numTimesMeasurementIncreases(allDepths: List[Int]): Int = {
+  def solutionToFirstHalf(allDepths: List[Int]): Int = {
     def loop(depths: List[Int], count: Int): Int =
       depths match {
         // Terminal case
@@ -17,7 +17,7 @@ object Day1 extends App {
     loop(allDepths, 0)
   }
 
-  def numTimesMeasurementSlidingWindowIncreases(allDepths: List[Int]): Int = {
+  def solutionToSecondHalf(allDepths: List[Int]): Int = {
     def loop(depths: List[Int], count: Int): Int =
       depths match {
         // Atleast 4 elements need to exist for a comparison
@@ -42,9 +42,7 @@ object Day1 extends App {
     .filterNot(_.isEmpty)
     .map(_.toInt)
 
-  // solution to part 1
-  println(numTimesMeasurementIncreases(allDepths))
+  println(solutionToFirstHalf(allDepths))
 
-  // solution to part 2
-  println(numTimesMeasurementSlidingWindowIncreases(allDepths))
+  println(solutionToSecondHalf(allDepths))
 }
