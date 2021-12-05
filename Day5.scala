@@ -51,7 +51,31 @@ object Day5 extends App {
             val p = Point(x, y1)
             pointToOccurence(p) = pointToOccurence.getOrElse(p, 0) + 1
           }
+        case _ => // do nothing
+      }
+    }
 
+    pointToOccurence.count { case (_, occurence) =>
+      occurence >= 2
+    }
+  }
+
+  def solutionToSecondHalf(lines: List[Line]): Int = {
+    val pointToOccurence: mutable.Map[Point, Int] =
+      mutable.Map.empty[Point, Int]
+
+    lines.foreach { case Line(start, end) =>
+      (start, end) match {
+        case (Point(x1, y1), Point(x2, y2)) if (x1 == x2) =>
+          (math.min(y1, y2) to math.max(y1, y2)).foreach { y =>
+            val p = Point(x1, y)
+            pointToOccurence(p) = pointToOccurence.getOrElse(p, 0) + 1
+          }
+        case (Point(x1, y1), Point(x2, y2)) if (y1 == y2) =>
+          (math.min(x1, x2) to math.max(x1, x2)).foreach { x =>
+            val p = Point(x, y1)
+            pointToOccurence(p) = pointToOccurence.getOrElse(p, 0) + 1
+          }
         case (Point(x1, y1), Point(x2, y2))
             if (math.abs(x1 - x2) == math.abs(y1 - y2)) =>
           val xStep = if ((x1 - x2) > 0) -1 else 1
@@ -80,4 +104,5 @@ object Day5 extends App {
     readAllLines("day-5-input.txt").map(_.strip).map(Line.fromString(_).get)
 
   println(solutionToFirstHalf(inputLines))
+  println(solutionToSecondHalf(inputLines))
 }
