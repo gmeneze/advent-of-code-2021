@@ -1,5 +1,6 @@
 import InputReader._
 import scala.annotation.tailrec
+import scala.collection.mutable
 
 object Day4 extends App {
   type Board = Vector[Vector[Int]]
@@ -75,42 +76,25 @@ object Day4 extends App {
     //   - Board will not contain negative numbers, we use -1 to mark drawn numbers.
     //   - Board will not contain the same number twice.
     //   - Multiple boards might win for a given drawn number,
-    //     just returning the first winning board is enough for our purposes.
-    @tailrec
-    def winningBoardForDrawnNumber(
-        boards: List[Board],
-        drawnNumber: Int,
-        seenNumbers: Set[Int]
-    ): Option[Board] = {
-      boards match {
-        // found a winning board
-        case x :: xs if didBoardWin(x, drawnNumber, seenNumbers) => Some(x)
-        // did not find a winning board
-        case x :: xs => winningBoardForDrawnNumber(xs, drawnNumber, seenNumbers)
-        case Nil     => None
+    //     just returning the first winning board is enough for our purposes
+
+    val seenNumbers = mutable.Set.empty[Int]
+    var winningBoard: Option[Board] = Option.empty[Board]
+
+    def findWinningBoard(num: Int): Option[Board] = {
+      seenNumbers.addOne(num)
+      winningBoard = boards.collectFirst {
+        case board if didBoardWin(board, num, seenNumbers.toSet) => board
       }
+      winningBoard
     }
 
-    @tailrec
-    def loop(
-        boards: List[Board],
-        drawnNumbers: List[Int],
-        seenNumbers: Set[Int]
-    ): Long =
-      drawnNumbers match {
-        case num :: nums =>
-          val newSeenNumbers = seenNumbers + num
-          winningBoardForDrawnNumber(boards, num, newSeenNumbers) match {
-            case Some(board) =>
-              calculateBoardSum(board, newSeenNumbers) * num
-            case None =>
-              loop(boards, nums, newSeenNumbers)
-          }
-        // this indicates something is wrong with the input
-        case Nil => throw new AssertionError("this shouldn't have happened")
-      }
+    drawnNumbers.collectFirst {
+      case num if findWinningBoard(num).isDefined =>
+        calculateBoardSum(winningBoard.get, seenNumbers.toSet) * num
+    }.get
 
-    loop(boards, drawnNumbers, Set.empty[Int])
+    // loop(boards, drawnNumbers, Set.empty[Int])
   }
 
   def solutionToSecondHalf(
