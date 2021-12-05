@@ -9,6 +9,7 @@ object Day1 extends App {
           case true  => acc + 1
           case false => acc
         }
+      case _ => throw new AssertionError("this shouldn't have happened")
     }
   }
 

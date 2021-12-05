@@ -1,4 +1,5 @@
 import InputReader._
+import scala.annotation.tailrec
 
 object Day4 extends App {
   type Board = Vector[Vector[Int]]
@@ -41,6 +42,7 @@ object Day4 extends App {
     type RowNum = Int
     type ColNum = Int
 
+    @tailrec
     def searchBoard(row: RowNum, col: ColNum): Option[(RowNum, ColNum)] = {
       (row, col) match {
         case (5, _) => None
@@ -64,7 +66,6 @@ object Day4 extends App {
     }
   }
 
-
   def solutionToFirstHalf(
       boards: List[Board],
       drawnNumbers: List[Int]
@@ -75,6 +76,7 @@ object Day4 extends App {
     //   - Board will not contain the same number twice.
     //   - Multiple boards might win for a given drawn number,
     //     just returning the first winning board is enough for our purposes.
+    @tailrec
     def winningBoardForDrawnNumber(
         boards: List[Board],
         drawnNumber: Int,
@@ -89,6 +91,7 @@ object Day4 extends App {
       }
     }
 
+    @tailrec
     def loop(
         boards: List[Board],
         drawnNumbers: List[Int],
@@ -104,17 +107,17 @@ object Day4 extends App {
               loop(boards, nums, newSeenNumbers)
           }
         // this indicates something is wrong with the input
-        case Nil => -1
+        case Nil => throw new AssertionError("this shouldn't have happened")
       }
 
     loop(boards, drawnNumbers, Set.empty[Int])
   }
 
-
   def solutionToSecondHalf(
       boards: List[Board],
       drawnNumbers: List[Int]
   ): Long = {
+    @tailrec
     def loop(
         boards: List[Board],
         drawnNumbers: List[Int],
@@ -130,7 +133,7 @@ object Day4 extends App {
           else loop(losingBoards, nums, newSeenNumbers)
 
         // this indicates something is wrong with the input
-        case Nil => -1
+        case Nil => throw new AssertionError("this shouldn't have happened")
       }
 
     loop(boards, drawnNumbers, Set.empty[Int])
