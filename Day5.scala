@@ -71,9 +71,9 @@ object Day5 extends App {
       }
     }
 
-    pointToOccurence.filter { case (_, occurence) =>
+    pointToOccurence.count { case (_, occurence) =>
       occurence >= 2
-    }.size
+    }
   }
 
   val inputLines: List[Line] =
