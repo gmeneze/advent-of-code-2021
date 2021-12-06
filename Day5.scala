@@ -19,7 +19,28 @@ object Day5 extends App {
 
   }
 
-  case class Line(start: Point, end: Point)
+  case class Line(start: Point, end: Point) {
+    def sameX: Boolean = start.x == end.x
+    def sameY: Boolean = start.y == end.y
+    def isDiagonal: Boolean = math.abs(start.x - end.x) == math.abs(start.y - end.y)
+
+    def allPoints: List[Point] = {
+      (start, end) match {
+        case (Point(x1, y1), Point(x2, y2)) if sameX =>
+          val yStep = if ((y1 - y2) > 0) -1 else 1
+          (y1 to y2 by yStep).map(y => Point(x1, y)).toList
+        case (Point(x1, y1), Point(x2, y2)) if sameY =>
+          val xStep = if ((x1 - x2) > 0) -1 else 1
+          (x1 to x2 by xStep).map(x => Point(x, y1)).toList
+        case (Point(x1, y1), Point(x2, y2)) if isDiagonal =>
+          val xStep = if ((x1 - x2) > 0) -1 else 1
+          val yStep = if ((y1 - y2) > 0) -1 else 1
+          (x1 to x2 by xStep).zip(y1 to y2 by yStep).map(Point.apply).toList
+        case _ => Nil
+      }
+    }
+  }
+
   object Line {
     def fromString(str: String): Try[Line] =
       str.split(" -> ").toList match {
@@ -36,68 +57,21 @@ object Day5 extends App {
   }
 
   def solutionToFirstHalf(lines: List[Line]): Int = {
-    val pointToOccurence: mutable.Map[Point, Int] =
-      mutable.Map.empty[Point, Int]
+    val sameXOrYLines = lines.filter(line => line.sameX || line.sameY)
 
-    lines.foreach { case Line(start, end) =>
-      (start, end) match {
-        case (Point(x1, y1), Point(x2, y2)) if (x1 == x2) =>
-          (math.min(y1, y2) to math.max(y1, y2)).foreach { y =>
-            val p = Point(x1, y)
-            pointToOccurence(p) = pointToOccurence.getOrElse(p, 0) + 1
-          }
-        case (Point(x1, y1), Point(x2, y2)) if (y1 == y2) =>
-          (math.min(x1, x2) to math.max(x1, x2)).foreach { x =>
-            val p = Point(x, y1)
-            pointToOccurence(p) = pointToOccurence.getOrElse(p, 0) + 1
-          }
-        case _ => // do nothing
-      }
-    }
-
-    pointToOccurence.count { case (_, occurence) =>
-      occurence >= 2
-    }
+    sameXOrYLines
+      .flatMap(_.allPoints)
+      .groupBy(identity)
+      .map { case (p, points) => p -> points.size }
+      .count(_._2 >= 2)
   }
 
   def solutionToSecondHalf(lines: List[Line]): Int = {
-    val pointToOccurence: mutable.Map[Point, Int] =
-      mutable.Map.empty[Point, Int]
-
-    lines.foreach { case Line(start, end) =>
-      (start, end) match {
-        case (Point(x1, y1), Point(x2, y2)) if (x1 == x2) =>
-          (math.min(y1, y2) to math.max(y1, y2)).foreach { y =>
-            val p = Point(x1, y)
-            pointToOccurence(p) = pointToOccurence.getOrElse(p, 0) + 1
-          }
-        case (Point(x1, y1), Point(x2, y2)) if (y1 == y2) =>
-          (math.min(x1, x2) to math.max(x1, x2)).foreach { x =>
-            val p = Point(x, y1)
-            pointToOccurence(p) = pointToOccurence.getOrElse(p, 0) + 1
-          }
-        case (Point(x1, y1), Point(x2, y2))
-            if (math.abs(x1 - x2) == math.abs(y1 - y2)) =>
-          val xStep = if ((x1 - x2) > 0) -1 else 1
-          val yStep = if ((y1 - y2) > 0) -1 else 1
-          var (x, y) = (x1, y1)
-
-          while (x != x2 && y != y2) {
-            val p = Point(x, y)
-            pointToOccurence(p) = pointToOccurence.getOrElse(p, 0) + 1
-            x = x + xStep
-            y = y + yStep
-          }
-
-          val p = Point(x, y)
-          pointToOccurence(p) = pointToOccurence.getOrElse(p, 0) + 1
-        case _ => // do nothing
-      }
-    }
-
-    pointToOccurence.count { case (_, occurence) =>
-      occurence >= 2
-    }
+    lines
+      .flatMap(_.allPoints)
+      .groupBy(identity)
+      .map { case (p, points) => p -> points.size }
+      .count(_._2 >= 2)
   }
 
   val inputLines: List[Line] =
