@@ -1,7 +1,7 @@
 import scala.util.Using
 import scala.io.Source
 
-object InputReader extends App {
+object InputReader {
   def readAllLines(fileName: String): List[String] =
     Using(Source.fromFile(s"./inputs/$fileName"))(_.getLines.toList).get
 
