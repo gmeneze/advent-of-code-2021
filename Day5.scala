@@ -22,7 +22,8 @@ object Day5 extends App {
   case class Line(start: Point, end: Point) {
     def sameX: Boolean = start.x == end.x
     def sameY: Boolean = start.y == end.y
-    def isDiagonal: Boolean = math.abs(start.x - end.x) == math.abs(start.y - end.y)
+    def isDiagonal: Boolean =
+      math.abs(start.x - end.x) == math.abs(start.y - end.y)
 
     def allPoints: List[Point] = {
       (start, end) match {
