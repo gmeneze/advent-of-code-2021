@@ -13,8 +13,7 @@ object Day6 extends App {
         case true =>
           val leftDays = afterDays - (daysToBirth + 1)
           Fish(6).familySize(leftDays) + Fish(8).familySize(leftDays)
-        case false =>
-          1
+        case false => 1
       }
 
       familySizeCache((daysToBirth, afterDays)) = result
@@ -22,7 +21,10 @@ object Day6 extends App {
     }
   }
 
-  def solutionToFirstAndSecondHalf(fishes: Vector[Fish], afterDays: Int): Long = {
+  def solutionToFirstAndSecondHalf(
+      fishes: Vector[Fish],
+      afterDays: Int
+  ): Long = {
     fishes.map(_.familySize(afterDays)).sum
   }
 
