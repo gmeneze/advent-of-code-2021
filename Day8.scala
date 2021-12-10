@@ -59,7 +59,7 @@ object Day8 extends App {
     def parsePatterns(digits: List[Digit]): Map[Digit, Int] = {
       val numToDigit = mutable.Map.empty[Int, Digit]
 
-      // first pass, find 1, 4, 7, 8
+      // first pass: find 1, 4, 7, 8
       digits.foreach {
         case d if d.isOne   => numToDigit.addOne(1 -> d)
         case d if d.isFour  => numToDigit.addOne(4 -> d)
@@ -68,7 +68,7 @@ object Day8 extends App {
         case _ => // allow other digits to fall through in this pass
       }
 
-      // second pass, find all other digits (using 1, 4, 7, 8)
+      // second pass: find all other digits (using 1, 4, 7, 8)
       digits.foreach {
         case d if d.isZero(numToDigit(1), numToDigit(4)) =>
           numToDigit.addOne(0 -> d)
@@ -101,6 +101,7 @@ object Day8 extends App {
     input.foldLeft(0) { case (acc, string) =>
       val Array(patternsStr: String, outputValueStr: String) =
         string.split("\\|")
+
       val patterns: List[Digit] =
         patternsStr
           .split(" ")
@@ -108,6 +109,7 @@ object Day8 extends App {
           .filterNot(_.isEmpty)
           .map(Digit.fromString(_))
           .toList
+
       val outputValues: List[Digit] =
         outputValueStr
           .split(" ")
