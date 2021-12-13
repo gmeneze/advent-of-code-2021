@@ -4,11 +4,16 @@ import scala.util.{Try, Success, Failure}
 
 object Day13 extends App {
   sealed trait Input
-  case class Dot(x: Int, y: Int) extends Input
-  sealed trait Instruction extends Input
   object Input {
-    case class FoldUp(y: Int) extends Instruction
-    case class FoldLeft(x: Int) extends Instruction
+    case class Dot(x: Int, y: Int) extends Input
+
+    sealed trait Instruction extends Input
+    object Instruction {
+      case class FoldUp(y: Int) extends Instruction
+      case class FoldLeft(x: Int) extends Instruction
+    }
+
+    import Instruction._
 
     def fromString(str: String): Try[Input] = Try {
       val dotPattern = """(\d+)\,(\d+)""".r
@@ -25,6 +30,7 @@ object Day13 extends App {
   }
 
   import Input._
+  import Instruction._
 
   def processInstruction(dots: Set[Dot], instruction: Instruction): Set[Dot] = {
     dots.map { case dot =>
