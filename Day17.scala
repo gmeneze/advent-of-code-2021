@@ -1,11 +1,12 @@
 import InputReader._
+import scala.annotation.tailrec
 
 object Day17 extends App {
   case class TargetArea(xMin: Int, xMax: Int, yMin: Int, yMax: Int)
 
   def solutionToSecondHalf(targetArea: TargetArea): Long = {
+    @tailrec
     def hitsTarget(x: Int, y: Int, xVel: Int, yVel: Int): Boolean = {
-      // println(s"x: $x, y:$y")
       val TargetArea(xMin, xMax, yMin, yMax) = targetArea
 
       (x, y) match {
